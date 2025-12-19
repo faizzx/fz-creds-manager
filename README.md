@@ -12,3 +12,8 @@ please review the code thoroughly before using it for production secrets.
 1. `pip install -r requirements.txt`
 2. Copy `.env.example` to `.env` and generate your own keys.
 3. Run `uvicorn main:app --reload`
+
+
+
+### Note:
+the MASTER_KEY should be handled with care and that this is a "Proof of Concept" before moving to AWS.
