@@ -15,8 +15,16 @@ please review the code thoroughly before using it for production secrets.
 2. Copy `.env.example` to `.env` and generate your own keys.
 3. Run `uvicorn main:app --reload`
 
----
-#### Note: The MASTER_KEY should be handled with care and that this is a "Proof of Concept" before moving to AWS.
+#### Note: `The MASTER_KEY should be handled with care and that this is a "Proof of Concept" before moving to AWS.`
+
+
+#### To use AWS KMS:
+1. Create IAM user (add necessary permissions to access KMS)
+2. Go to the KMS Console -> Customer managed keys (add necessary permissions under Key Policy for user to access)
+
+
+#### Note: `AWS KMS keys have a "double-lock." The user needs permission to use the key, and the Key itself must allow that user.` 
+
 
 ---
 ### Architecture:

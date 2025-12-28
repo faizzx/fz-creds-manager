@@ -10,12 +10,20 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt # Used to decode the token
 
 import crypto
+from fastapi.middleware.cors import CORSMiddleware
 
 # This line creates the actual .db file and tables when the app starts
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="fz-creds-manager")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # For production, you'd put your domain here
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def health_check():
@@ -175,3 +183,13 @@ def create_secret(
     db.commit()
 
     return {"message": f"Secret '{secret_data.key_name}' saved and encrypted successfully."}
+
+@app.get("/creds")
+def list_credentials(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    # Fetch all secrets belonging to the logged-in user
+    secrets = db.query(models.Secret).filter(models.Secret.owner_id == current_user.id).all()
+    # We only return the key_names, NOT the values (for better security/performance)
+    return [{"key_name": s.key_name} for s in secrets]
